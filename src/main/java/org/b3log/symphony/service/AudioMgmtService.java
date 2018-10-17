@@ -127,7 +127,7 @@ public class AudioMgmtService {
 
                 if (HttpServletResponse.SC_OK != responseCode || !"audio/mp3".equals(contentType)) {
                     final String msg = IOUtils.toString(inputStream, "UTF-8");
-                    LOGGER.warn("Baidu Yuyin TTS failed: " + msg);
+                    LOGGER.warn("Baidu Yuyin TTS failed: " + msg.toString());
                     conn.disconnect();
 
                     return null;

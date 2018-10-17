@@ -17,7 +17,7 @@
  */
 package org.b3log.symphony.processor;
 
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.After;
@@ -93,11 +93,13 @@ public class TopProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/top", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showTop(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showTop(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("top/index.ftl");
@@ -118,11 +120,13 @@ public class TopProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/top/link", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showLink(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showLink(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("top/link.ftl");
@@ -144,11 +148,13 @@ public class TopProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/top/balance", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showBalance(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showBalance(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("top/balance.ftl");
@@ -171,11 +177,13 @@ public class TopProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/top/consumption", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showConsumption(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showConsumption(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("top/consumption.ftl");
@@ -198,11 +206,12 @@ public class TopProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/top/checkin", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showCheckin(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showCheckin(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("top/checkin.ftl");

@@ -20,17 +20,20 @@ package org.b3log.symphony.processor.channel;
 import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
-import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.util.Locales;
 import org.b3log.symphony.model.*;
 import org.b3log.symphony.service.RoleQueryService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Skins;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
 import javax.websocket.*;
@@ -46,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Article channel.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.9.9, Sep 27, 2018
+ * @version 2.3.9.8, Jun 11, 2018
  * @since 1.3.0
  */
 @ServerEndpoint(value = "/article-channel", configurator = Channels.WebSocketConfigurator.class)
@@ -100,10 +103,10 @@ public class ArticleChannel {
     public static void notifyComment(final JSONObject message) {
         message.put(Common.TYPE, Comment.COMMENT);
 
-        final BeanManager beanManager = BeanManager.getInstance();
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final UserQueryService userQueryService = beanManager.getReference(UserQueryService.class);
         final RoleQueryService roleQueryService = beanManager.getReference(RoleQueryService.class);
-        final LangPropsService langPropsService = beanManager.getReference(LangPropsService.class);
+        final LangPropsService langPropsService = beanManager.getReference(LangPropsServiceImpl.class);
         final JSONObject article = message.optJSONObject(Article.ARTICLE);
 
         for (final Session session : SESSIONS) {
@@ -166,12 +169,15 @@ public class ArticleChannel {
                 Keys.fillServer(dataModel);
                 dataModel.put(Comment.COMMENT, message);
 
+                String templateDirName = Symphonys.get("skinDirName");
                 if (isLoggedIn) {
                     dataModel.putAll(langPropsService.getAll(Locales.getLocale(user.optString(UserExt.USER_LANGUAGE))));
                     final String userId = user.optString(Keys.OBJECT_ID);
                     final Map<String, JSONObject> permissions
                             = roleQueryService.getUserPermissionsGrantMap(userId);
                     dataModel.put(Permission.PERMISSIONS, permissions);
+
+                    templateDirName = user.optString(UserExt.USER_SKIN);
                 } else {
                     dataModel.putAll(langPropsService.getAll(Locales.getLocale()));
                     final Map<String, JSONObject> permissions
@@ -179,8 +185,7 @@ public class ArticleChannel {
                     dataModel.put(Permission.PERMISSIONS, permissions);
                 }
 
-                final String templateDirName = (String) session.getUserProperties().get(Keys.TEMAPLTE_DIR_NAME);
-                final Template template = Skins.SKIN.getTemplate(templateDirName + "/common/comment.ftl");
+                final Template template = Skins.SKIN.getTemplate("common/comment.ftl");
                 final StringWriter stringWriter = new StringWriter();
                 template.process(dataModel, stringWriter);
                 stringWriter.close();
@@ -205,7 +210,7 @@ public class ArticleChannel {
      */
     @OnOpen
     public void onConnect(final Session session) {
-        final String articleId = Channels.getHttpParameter(session, Article.ARTICLE_T_ID);
+        final String articleId = (String) Channels.getHttpParameter(session, Article.ARTICLE_T_ID);
         if (StringUtils.isBlank(articleId)) {
             return;
         }
@@ -268,7 +273,7 @@ public class ArticleChannel {
     private void removeSession(final Session session) {
         SESSIONS.remove(session);
 
-        final String articleId = Channels.getHttpParameter(session, Article.ARTICLE_T_ID);
+        final String articleId = (String) Channels.getHttpParameter(session, Article.ARTICLE_T_ID);
         if (StringUtils.isBlank(articleId)) {
             return;
         }

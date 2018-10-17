@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.LangPropsService;
@@ -137,7 +137,7 @@ public class CityProcessor {
         dataModel.put(Article.ARTICLES, articles); // an empty list to avoid null check in template
         dataModel.put(Common.SELECTED, Common.CITY);
 
-        final JSONObject user = (JSONObject) request.getAttribute(Common.CURRENT_USER);
+        final JSONObject user = (JSONObject) request.getAttribute(User.USER);
         if (!UserExt.finshedGuide(user)) {
             response.sendRedirect(Latkes.getServePath() + "/guide");
 
@@ -226,7 +226,7 @@ public class CityProcessor {
         dataModel.put(User.USERS, users);
         dataModel.put(Common.SELECTED, Common.CITY);
 
-        final JSONObject user = (JSONObject) request.getAttribute(Common.CURRENT_USER);
+        final JSONObject user = (JSONObject) request.getAttribute(User.USER);
         if (!UserExt.finshedGuide(user)) {
             response.sendRedirect(Latkes.getServePath() + "/guide");
 

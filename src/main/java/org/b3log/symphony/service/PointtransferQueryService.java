@@ -17,9 +17,8 @@
  */
 package org.b3log.symphony.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -44,7 +43,7 @@ import java.util.List;
  * Pointtransfer query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.21.4.1, Oct 1, 2018
+ * @version 1.21.4.0, Aug 27, 2018
  * @since 1.3.0
  */
 @Service
@@ -512,12 +511,6 @@ public class PointtransferQueryService {
 
                         final String userLink = UserExt.getUserLink(user9);
                         desTemplate = desTemplate.replace("{user}", userLink);
-                        final String memo = record.optString(Pointtransfer.MEMO);
-                        if (StringUtils.isNotBlank(memo)) {
-                            desTemplate = desTemplate.replace("{memo}", memo);
-                        } else {
-                            desTemplate = desTemplate.replace("{memo}", langPropsService.get("noMemoLabel"));
-                        }
 
                         break;
                     case Pointtransfer.TRANSFER_TYPE_C_ACTIVITY_CHECKIN_STREAK:

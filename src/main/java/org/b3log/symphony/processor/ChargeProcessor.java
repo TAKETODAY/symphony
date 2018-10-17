@@ -17,7 +17,7 @@
  */
 package org.b3log.symphony.processor;
 
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
@@ -66,11 +66,13 @@ public class ChargeProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/charge/point", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
-    public void showChargePoint(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void showChargePoint(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(request);
         context.setRenderer(renderer);
         renderer.setTemplateName("charge-point.ftl");

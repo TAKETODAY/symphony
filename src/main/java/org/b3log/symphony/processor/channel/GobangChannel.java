@@ -18,8 +18,9 @@
 package org.b3log.symphony.processor.channel;
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.ServiceException;
@@ -148,7 +149,7 @@ public class GobangChannel {
                 sendText.put("message", "【系统】：请等待另一名玩家加入游戏");
                 session.getAsyncRemote().sendText(sendText.toString());
             } else {
-                final BeanManager beanManager = BeanManager.getInstance();
+                final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
                 chessGame.setPlayer2(userId);
                 chessGame.setName2(userName);
                 chessGame.setPlayState2(true);
@@ -199,7 +200,7 @@ public class GobangChannel {
         final String player = jsonObject.optString("player");
         final String anti = getAntiPlayer(player);
         JSONObject sendText = new JSONObject();
-        final BeanManager beanManager = BeanManager.getInstance();
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         switch (jsonObject.optInt("type")) {
             case 1: //聊天
                 LOGGER.debug(jsonObject.optString("message"));
@@ -330,7 +331,7 @@ public class GobangChannel {
                             chessPlaying.remove(player);
                             antiPlayer.remove(player);
                             //由于玩家2先退出，补偿玩家1的积分
-                            final BeanManager beanManager = BeanManager.getInstance();
+                            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
                             final ActivityMgmtService activityMgmtService = beanManager.getReference(ActivityMgmtService.class);
                             activityMgmtService.collectGobang(chessGame.getPlayer1(), Pointtransfer.TRANSFER_SUM_C_ACTIVITY_GOBANG_START);
                         } else {
@@ -347,7 +348,7 @@ public class GobangChannel {
                             chessPlaying.remove(player1);
                             antiPlayer.remove(player1);
                             //由于玩家1先退出，补偿玩家2的积分
-                            final BeanManager beanManager = BeanManager.getInstance();
+                            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
                             final ActivityMgmtService activityMgmtService = beanManager.getReference(ActivityMgmtService.class);
                             activityMgmtService.collectGobang(chessGame.getPlayer2(), Pointtransfer.TRANSFER_SUM_C_ACTIVITY_GOBANG_START);
                         } else {

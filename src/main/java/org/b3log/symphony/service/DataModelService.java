@@ -20,7 +20,7 @@ package org.b3log.symphony.service;
 import org.apache.commons.lang.math.RandomUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.LangPropsService;
@@ -133,7 +133,8 @@ public class DataModelService {
      * @param article        the specified article
      * @throws Exception exception
      */
-    public void fillRelevantArticles(final int avatarViewMode, final Map<String, Object> dataModel, final JSONObject article) {
+    public void fillRelevantArticles(final int avatarViewMode,
+                                     final Map<String, Object> dataModel, final JSONObject article) throws Exception {
         final int articleStatus = article.optInt(Article.ARTICLE_STATUS);
         if (Article.ARTICLE_STATUS_C_INVALID == articleStatus) {
             dataModel.put(Common.SIDE_RELEVANT_ARTICLES, Collections.emptyList());
@@ -144,7 +145,8 @@ public class DataModelService {
         Stopwatchs.start("Fills relevant articles");
         try {
             dataModel.put(Common.SIDE_RELEVANT_ARTICLES,
-                    articleQueryService.getRelevantArticles(avatarViewMode, article, Symphonys.getInt("sideRelevantArticlesCnt")));
+                    articleQueryService.getRelevantArticles(
+                            avatarViewMode, article, Symphonys.getInt("sideRelevantArticlesCnt")));
         } finally {
             Stopwatchs.end();
         }
@@ -197,8 +199,9 @@ public class DataModelService {
      * Fills tags.
      *
      * @param dataModel the specified data model
+     * @throws Exception exception
      */
-    public void fillSideTags(final Map<String, Object> dataModel) {
+    public void fillSideTags(final Map<String, Object> dataModel) throws Exception {
         Stopwatchs.start("Fills side tags");
         try {
             dataModel.put(Common.SIDE_TAGS, tagQueryService.getTags(Symphonys.getInt("sideTagsCnt")));
@@ -215,8 +218,9 @@ public class DataModelService {
      * Fills index tags.
      *
      * @param dataModel the specified data model
+     * @throws Exception exception
      */
-    public void fillIndexTags(final Map<String, Object> dataModel) {
+    public void fillIndexTags(final Map<String, Object> dataModel) throws Exception {
         Stopwatchs.start("Fills index tags");
         try {
             for (int i = 0; i < 13; i++) {
@@ -285,8 +289,9 @@ public class DataModelService {
      * Fills footer.
      *
      * @param dataModel the specified data model
+     * @throws Exception exception
      */
-    private void fillFooter(final Map<String, Object> dataModel) {
+    private void fillFooter(final Map<String, Object> dataModel) throws Exception {
         fillSysInfo(dataModel);
 
         dataModel.put(Common.YEAR, String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
@@ -305,8 +310,10 @@ public class DataModelService {
      * @param request   the specified request
      * @param response  the specified response
      * @param dataModel the specified data model
+     * @throws Exception exception
      */
-    public void fillHeaderAndFooter(final HttpServletRequest request, final HttpServletResponse response, final Map<String, Object> dataModel) {
+    public void fillHeaderAndFooter(final HttpServletRequest request, final HttpServletResponse response,
+                                    final Map<String, Object> dataModel) throws Exception {
         Stopwatchs.start("Fills header");
         try {
             final boolean isMobile = (Boolean) request.getAttribute(Common.IS_MOBILE);
@@ -335,13 +342,20 @@ public class DataModelService {
      * @param response  the specified response
      * @param dataModel the specified data model
      */
-    private void fillPersonalNav(final HttpServletRequest request, final HttpServletResponse response, final Map<String, Object> dataModel) {
+    private void fillPersonalNav(final HttpServletRequest request, final HttpServletResponse response,
+                                 final Map<String, Object> dataModel) {
         Stopwatchs.start("Fills personal nav");
         try {
             dataModel.put(Common.IS_LOGGED_IN, false);
             dataModel.put(Common.IS_ADMIN_LOGGED_IN, false);
 
-            final JSONObject curUser = (JSONObject) request.getAttribute(Common.CURRENT_USER);
+            if (null == request.getAttribute(User.USER)) {
+                dataModel.put("loginLabel", langPropsService.get("loginLabel"));
+
+                return;
+            }
+
+            final JSONObject curUser = (JSONObject) request.getAttribute(User.USER);
             if (null == curUser) {
                 dataModel.put("loginLabel", langPropsService.get("loginLabel"));
 
@@ -502,8 +516,9 @@ public class DataModelService {
      * Fils new tags.
      *
      * @param dataModel the specified data model
+     * @throws Exception exception
      */
-    private void fillNewTags(final Map<String, Object> dataModel) {
+    private void fillNewTags(final Map<String, Object> dataModel) throws Exception {
         dataModel.put(Common.NEW_TAGS, tagQueryService.getNewTags());
     }
 

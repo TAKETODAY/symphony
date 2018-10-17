@@ -54,9 +54,9 @@ public class TagTagRepository extends AbstractRepository {
     /**
      * Gets tag-tag relations by the specified tag1 id.
      *
-     * @param tag1Id         the specified tag1 id
+     * @param tag1Id the specified tag1 id
      * @param currentPageNum the specified current page number, MUST greater then {@code 0}
-     * @param pageSize       the specified page size(count of a page contains objects), MUST greater then {@code 0}
+     * @param pageSize the specified page size(count of a page contains objects), MUST greater then {@code 0}
      * @return for example      <pre>
      * {
      *     "pagination": {
@@ -70,6 +70,7 @@ public class TagTagRepository extends AbstractRepository {
      *     }, ....]
      * }
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     public JSONObject getByTag1Id(final String tag1Id, final int currentPageNum, final int pageSize)
@@ -88,9 +89,9 @@ public class TagTagRepository extends AbstractRepository {
     /**
      * Gets tag-tag relations by the specified tag2 id.
      *
-     * @param tag2Id         the specified tag2 id
+     * @param tag2Id the specified tag2 id
      * @param currentPageNum the specified current page number, MUST greater then {@code 0}
-     * @param pageSize       the specified page size(count of a page contains objects), MUST greater then {@code 0}
+     * @param pageSize the specified page size(count of a page contains objects), MUST greater then {@code 0}
      * @return for example      <pre>
      * {
      *     "pagination": {
@@ -104,6 +105,7 @@ public class TagTagRepository extends AbstractRepository {
      *     }, ....]
      * }
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     public JSONObject getByTag2Id(final String tag2Id, final int currentPageNum, final int pageSize)
@@ -132,6 +134,7 @@ public class TagTagRepository extends AbstractRepository {
      *     "weight": int
      * }, returns {@code null} if not found
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     public JSONObject getByTag1IdAndTag2Id(final String tag1Id, final String tag2Id)

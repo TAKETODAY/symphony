@@ -45,9 +45,9 @@ public class DomainTagRepository extends AbstractRepository {
     /**
      * Gets domain-tag relations by the specified domain id.
      *
-     * @param domainId       the specified domain id
+     * @param domainId the specified domain id
      * @param currentPageNum the specified current page number, MUST greater then {@code 0}
-     * @param pageSize       the specified page size(count of a page contains objects), MUST greater then {@code 0}
+     * @param pageSize the specified page size(count of a page contains objects), MUST greater then {@code 0}
      * @return for example      <pre>
      * {
      *     "pagination": {
@@ -60,6 +60,7 @@ public class DomainTagRepository extends AbstractRepository {
      *     }, ....]
      * }
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     public JSONObject getByDomainId(final String domainId, final int currentPageNum, final int pageSize)
@@ -90,9 +91,9 @@ public class DomainTagRepository extends AbstractRepository {
     /**
      * Gets domain-tag relations by the specified tag id.
      *
-     * @param tagId          the specified tag id
+     * @param tagId the specified tag id
      * @param currentPageNum the specified current page number, MUST greater then {@code 0}
-     * @param pageSize       the specified page size(count of a page contains objects), MUST greater then {@code 0}
+     * @param pageSize the specified page size(count of a page contains objects), MUST greater then {@code 0}
      * @return for example      <pre>
      * {
      *     "pagination": {
@@ -105,6 +106,7 @@ public class DomainTagRepository extends AbstractRepository {
      *     }, ....]
      * }
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     public JSONObject getByTagId(final String tagId, final int currentPageNum, final int pageSize)

@@ -18,7 +18,7 @@
 package org.b3log.symphony.processor;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.After;
@@ -116,9 +116,11 @@ public class ManProcessor {
      * @param context  the specified context
      * @param request  the specified request
      * @param response the specified response
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/man/cmd", method = HTTPRequestMethod.GET)
-    public void listMans(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+    public void listMans(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
         context.renderJSON().renderTrueResult();
 
         final String cmdPrefix = request.getParameter(Common.NAME);

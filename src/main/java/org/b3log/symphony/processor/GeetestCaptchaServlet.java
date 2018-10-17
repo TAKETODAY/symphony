@@ -18,6 +18,7 @@
 package org.b3log.symphony.processor;
 
 import org.b3log.latke.Keys;
+import org.b3log.latke.model.User;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.util.GeetestLib;
 import org.b3log.symphony.util.Sessions;
@@ -45,7 +46,7 @@ public class GeetestCaptchaServlet extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        final JSONObject currentUser = (JSONObject) request.getAttribute(Common.CURRENT_USER);
+        final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
         if (null == currentUser) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
 

@@ -18,7 +18,7 @@
 package org.b3log.symphony.processor;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
@@ -73,12 +73,13 @@ public class ErrorProcessor {
      * @param request    the specified HTTP servlet request
      * @param response   the specified HTTP servlet response
      * @param statusCode the specified status code
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/error/{statusCode}", method = {HTTPRequestMethod.GET, HTTPRequestMethod.POST})
     @Before(adviceClass = StopwatchStartAdvice.class)
     @After(adviceClass = {PermissionGrant.class, StopwatchEndAdvice.class})
     public void handleErrorPage(final HTTPRequestContext context, final HttpServletRequest request,
-                                final HttpServletResponse response, final String statusCode) {
+                                final HttpServletResponse response, final String statusCode) throws Exception {
         if (StringUtils.equals("GET", request.getMethod())) {
             final String requestURI = request.getRequestURI();
             final String templateName = statusCode + ".ftl";

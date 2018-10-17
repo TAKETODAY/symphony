@@ -23,9 +23,11 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.model.User;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.*;
@@ -46,7 +48,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import java.util.Locale;
 
@@ -78,7 +79,7 @@ public final class SymphonyServletListener extends AbstractServletListener {
     /**
      * Bean manager.
      */
-    private BeanManager beanManager;
+    private LatkeBeanManager beanManager;
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
@@ -87,7 +88,7 @@ public final class SymphonyServletListener extends AbstractServletListener {
         Latkes.setScanPath("org.b3log.symphony");
         super.contextInitialized(servletContextEvent);
 
-        beanManager = BeanManager.getInstance();
+        beanManager = Lifecycle.getBeanManager();
 
         final InitMgmtService initMgmtService = beanManager.getReference(InitMgmtService.class);
         initMgmtService.initSym();
@@ -254,11 +255,6 @@ public final class SymphonyServletListener extends AbstractServletListener {
 
         request.setAttribute(Keys.TEMAPLTE_DIR_NAME, (Boolean) request.getAttribute(Common.IS_MOBILE)
                 ? "mobile" : "classic");
-        String templateDirName = (Boolean) request.getAttribute(Common.IS_MOBILE) ? "mobile" : "classic";
-        request.setAttribute(Keys.TEMAPLTE_DIR_NAME, templateDirName);
-
-        final HttpSession httpSession = request.getSession();
-        httpSession.setAttribute(Keys.TEMAPLTE_DIR_NAME, templateDirName);
 
         try {
             final UserQueryService userQueryService = beanManager.getReference(UserQueryService.class);
@@ -314,14 +310,11 @@ public final class SymphonyServletListener extends AbstractServletListener {
                 }
             }
 
-            final String skin = (Boolean) request.getAttribute(Common.IS_MOBILE)
-                    ? user.optString(UserExt.USER_MOBILE_SKIN) : user.optString(UserExt.USER_SKIN);
-
-            request.setAttribute(Keys.TEMAPLTE_DIR_NAME, skin);
-            httpSession.setAttribute(Keys.TEMAPLTE_DIR_NAME, skin);
+            request.setAttribute(Keys.TEMAPLTE_DIR_NAME, (Boolean) request.getAttribute(Common.IS_MOBILE)
+                    ? user.optString(UserExt.USER_MOBILE_SKIN) : user.optString(UserExt.USER_SKIN));
             request.setAttribute(UserExt.USER_AVATAR_VIEW_MODE, user.optInt(UserExt.USER_AVATAR_VIEW_MODE));
 
-            request.setAttribute(Common.CURRENT_USER, user);
+            request.setAttribute(User.USER, user);
 
             final Locale locale = Locales.getLocale(user.optString(UserExt.USER_LANGUAGE));
             Locales.setLocale(locale);

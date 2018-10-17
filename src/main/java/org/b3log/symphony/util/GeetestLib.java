@@ -22,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import java.util.HashMap;
 
 /**
  * <a href="https://github.com/GeeTeam/gt-java-sdk">Geetest Java SDK</a>.
- *
+ * 
  * @author unascribed
  * @since 1.4.0
  */
@@ -128,6 +127,7 @@ public class GeetestLib {
 
     /**
      * 预处理成功后的标准串
+     *
      */
     private String getSuccessPreProcessRes(String challenge) {
 
@@ -221,8 +221,8 @@ public class GeetestLib {
         InputStream inStream = null;
         byte[] buf = new byte[1024];
         inStream = connection.getInputStream();
-        for (int n; (n = inStream.read(buf)) != -1; ) {
-            sBuffer.append(new String(buf, 0, n, StandardCharsets.UTF_8));
+        for (int n; (n = inStream.read(buf)) != -1;) {
+            sBuffer.append(new String(buf, 0, n, "UTF-8"));
         }
         inStream.close();
         connection.disconnect();// 断开连接
@@ -241,8 +241,11 @@ public class GeetestLib {
             return true;
         }
 
-        return gtObj.toString().trim().length() == 0;
+        if (gtObj.toString().trim().length() == 0) {
+            return true;
+        }
 
+        return false;
     }
 
     /**
@@ -261,7 +264,11 @@ public class GeetestLib {
             return false;
         }
 
-        return !objIsEmpty(seccode);
+        if (objIsEmpty(seccode)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -270,7 +277,7 @@ public class GeetestLib {
      * @param challenge
      * @param validate
      * @param seccode
-     * @return 验证结果, 1表示验证成功0表示验证失败
+     * @return 验证结果,1表示验证成功0表示验证失败
      */
     public int enhencedValidateRequest(String challenge, String validate, String seccode) {
 
@@ -323,7 +330,7 @@ public class GeetestLib {
      * @param validate
      * @param seccode
      * @param userid
-     * @return 验证结果, 1表示验证成功0表示验证失败
+     * @return 验证结果,1表示验证成功0表示验证失败
      */
     public int enhencedValidateRequest(String challenge, String validate, String seccode, String userid) {
 
@@ -337,7 +344,7 @@ public class GeetestLib {
      * @param challenge
      * @param validate
      * @param seccode
-     * @return 验证结果, 1表示验证成功0表示验证失败
+     * @return 验证结果,1表示验证成功0表示验证失败
      */
     public int failbackValidateRequest(String challenge, String validate, String seccode) {
 
@@ -370,13 +377,14 @@ public class GeetestLib {
     }
 
     /**
+     *
      * @param ans
      * @param full_bg_index
      * @param img_grp_index
      * @return
      */
     private int validateFailImage(int ans, int full_bg_index,
-                                  int img_grp_index) {
+            int img_grp_index) {
         final int thread = 3;// 容差值
 
         String full_bg_name = md5Encode(full_bg_index + "").substring(0, 9);
@@ -395,7 +403,7 @@ public class GeetestLib {
             }
         }
 
-        String x_decode = answer_decode.substring(4);
+        String x_decode = answer_decode.substring(4, answer_decode.length());
 
         int x_int = Integer.valueOf(x_decode, 16);// 16 to 10
 
@@ -506,13 +514,13 @@ public class GeetestLib {
      * @throws Exception
      */
     protected String postValidate(String host, String path, String data,
-                                  int port) throws Exception {
+            int port) throws Exception {
         String response = "error";
 
         InetAddress addr = InetAddress.getByName(host);
         Socket socket = new Socket(addr, port);
         BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
-                socket.getOutputStream(), StandardCharsets.UTF_8));
+                socket.getOutputStream(), "UTF8"));
         wr.write("POST " + path + " HTTP/1.0\r\n");
         wr.write("Host: " + host + "\r\n");
         wr.write("Content-Type: application/x-www-form-urlencoded\r\n");
@@ -525,7 +533,7 @@ public class GeetestLib {
 
         // 读取返回信息
         BufferedReader rd = new BufferedReader(new InputStreamReader(
-                socket.getInputStream(), StandardCharsets.UTF_8));
+                socket.getInputStream(), "UTF-8"));
         String line;
         while ((line = rd.readLine()) != null) {
             response = line;
@@ -539,9 +547,9 @@ public class GeetestLib {
     /**
      * md5 加密
      *
+     * @time 2014年7月10日 下午3:30:01
      * @param plainText
      * @return
-     * @time 2014年7月10日 下午3:30:01
      */
     private String md5Encode(String plainText) {
         String re_md5 = "";
@@ -550,7 +558,7 @@ public class GeetestLib {
             md.update(plainText.getBytes());
             byte b[] = md.digest();
             int i;
-            StringBuffer buf = new StringBuffer();
+            StringBuffer buf = new StringBuffer("");
             for (int offset = 0; offset < b.length; offset++) {
                 i = b[offset];
                 if (i < 0) {
